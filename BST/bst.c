@@ -3,18 +3,20 @@
 #include<string.h>
 
 
-void inicializar(arvoreBST * raiz) {
+void inicializarBST(arvoreBST * raiz) {
 	 raiz = NULL;
 }
 
 
 arvoreBST *inserirBST (arvoreBST * raiz, char* modelo, int indice)
-{
+{ 
+  
 
   if (raiz == NULL)
     {
       arvoreBST *no = (arvoreBST *) malloc (sizeof (arvoreBST));
       no->modelo = (char*)malloc(sizeof(modelo));
+      
       strcpy(no->modelo,modelo);
       no->indice = indice;
       no->dir = NULL;
@@ -39,41 +41,69 @@ arvoreBST *inserirBST (arvoreBST * raiz, char* modelo, int indice)
 }
 
 
-arvoreBST *preorderBST (arvoreBST * raiz)
+void preorderBST (arvoreBST * raiz)
 {
 
   if (raiz != NULL)
     {
-      printf ("%d ", raiz->modelo);
-      preorder (raiz->esq);
-      preorder (raiz->dir);
+      printf ("%s ", raiz->modelo);
+      preorderBST (raiz->esq);
+      preorderBST (raiz->dir);
     }
 }
 
-arvoreBST *inorderBST (arvoreBST * raiz)
+void inorderBST (arvoreBST * raiz)
 {
 
   if (raiz != NULL)
     {
-      inorder (raiz->esq);
-      printf ("%d ", raiz->modelo);
-      inorder (raiz->dir);
+      inorderBST (raiz->esq);
+      printf ("%s ", raiz->modelo);
+      inorderBST (raiz->dir);
     }
 
 }
 
 
-arvoreBST *posorderBST (arvoreBST * raiz)
+void posorderBST (arvoreBST * raiz)
 {
 
   if (raiz != NULL)
     {
       posorderBST (raiz->esq);
       posorderBST (raiz->dir);
-      printf ("%d ", raiz->modelo);
+      printf ("%s ", raiz->modelo);
     }
 }
 
+arvoreBST *menorElementoBST (arvoreBST * raiz)
+{
+  if (raiz == NULL)
+    {
+      return NULL;
+    }
+
+  if (raiz->esq == NULL)
+    {
+      return raiz;
+    }
+
+  return menorElementoBST (raiz->esq);
+}
+
+int maiorBST(int a, int b) {
+	if(a > b)
+		return a;
+	else
+		return b;
+}
+
+int alturaBST(arvoreBST* raiz){
+  if(raiz == NULL) {
+		return 0;
+	}
+	return 1 + maiorBST(alturaBST(raiz->dir), alturaBST(raiz->esq));
+}
 
 arvoreBST *maiorElementoBST (arvoreBST * raiz)
 {
@@ -91,7 +121,10 @@ arvoreBST *maiorElementoBST (arvoreBST * raiz)
 }
 
 
-arvoreBST *removerBST (arvoreBST * raiz, int modelo)
+
+
+
+arvoreBST *removerBST (arvoreBST * raiz, char* modelo)
 {
 
   if (raiz == NULL)
@@ -137,3 +170,4 @@ arvoreBST *removerBST (arvoreBST * raiz, int modelo)
   return raiz;
 
 }
+

@@ -2,30 +2,30 @@
 #define RB_H
 #include <stdlib.h>
 
-typedef struct no {
+typedef struct noRB {
     char *estado;
     int cor;
-    struct no *esq;
-    struct no *dir;
-    struct no *pai;
+    struct noRB *esq;
+    struct noRB *dir;
+    struct noRB *pai;
     int indice;
-} no;
+} noRB;
 
 typedef struct arvore {
-    no *raiz;
+    noRB*raiz;
 } arvoreRB;
 
-void rotacao_esquerdaRB(arvoreRB *T, no *x);
-void rotacao_direitaRB(arvoreRB *T, no *x);
+void rotacao_esquerdaRB(arvoreRB *T, noRB *x);
+void rotacao_direitaRB(arvoreRB *T, noRB *x);
 void inserirRB(arvoreRB *T, int a);
-void inserirRB_corrigir(arvoreRB *T, no *z);
-void transplantRB(arvoreRB *T, no *u, no *v);
-no *minimoRB(no *x);
-void removerRB(arvoreRB *T, no *z);
-void removerRB_corrigir(arvoreRB *T, no *x);
-void preorderRB(arvoreRB *T, no *x);
-void inorderRB(arvoreRB *T, no *x);
-void posorderRB(arvoreRB *T, no *x);
+void inserirRB_corrigir(arvoreRB *T, noRB *z);
+void transplantRB(arvoreRB *T, noRB *u, noRB *v);
+noRB *minimoRB(noRB *x);
+void removerRB(arvoreRB *T, noRB *z);
+void removerRB_corrigir(arvoreRB *T, noRB *x);
+void preorderRB(arvoreRB *T, noRB *x);
+void inoRBrderRB(arvoreRB *T, noRB *x);
+void posorderRB(arvoreRB *T, noRB *x);
 
 
 

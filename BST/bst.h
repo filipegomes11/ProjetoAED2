@@ -8,24 +8,30 @@
 typedef struct noBST
 {
   char * modelo;
-  struct no *esq;
-  struct no *dir;
+  struct noBST *esq;
+  struct noBST *dir;
   int indice;
 } arvoreBST;
 
 
+
+int alturaBST(arvoreBST *raiz);
+
+int maiorBST(int a, int b); 
+
 arvoreBST *inserirBST (arvoreBST * raiz, char* modelo, int indice);
 
-arvoreBST *preorderBST (arvoreBST * raiz);
+void preorderBST (arvoreBST * raiz);
 
-arvoreBST *inorderBST  (arvoreBST * raiz);
+void inorderBST  (arvoreBST * raiz);
 
-arvoreBST *posorderBST (arvoreBST * raiz);
+void posorderBST (arvoreBST * raiz);
 
 arvoreBST *maiorElementoBST (arvoreBST * raiz);
+arvoreBST *menorElementoBST (arvoreBST * raiz);
 
-arvoreBST *removerBST (arvoreBST * raiz, int valor);
+arvoreBST *removerBST (arvoreBST * raiz, char* modelo);
 
-void inicializar(arvoreBST *raiz);
+void inicializarBST(arvoreBST * raiz);
 
 #endif

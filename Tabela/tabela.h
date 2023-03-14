@@ -1,14 +1,14 @@
 #ifndef TABELA_H
 #define TABELA_H
 #include "../BST/bst.h" 
-#include "../AVL/avl.h"
-#include "../RedBlack/RB.h"
+//#include "../AVL/avl.h"
+//#include "../RedBlack/RB.h"
 #include <stdlib.h>
 #include <stdio_ext.h>
 
 
 typedef struct carro{
-    int codigo;
+    char* codigo;
     char* modelo;
     char* marca;
     char* estado;
@@ -39,11 +39,11 @@ void tirar_enter(char *string);
 
 void salvar_arquivo_BST(char *nome, arvoreBST a);
 
-void salvar_auxiliar_BST(arvoreBST raiz, FILE *arq);
+void salvar_auxiliar_BST(arvoreBST* raiz, FILE *arq);
 
 arvoreBST carregar_arquivo_BST(char *nome, arvoreBST* a);
 
-void imprimir_elemento_BST(arvoreBST raiz, tabela * tab);
+void imprimir_elemento_BST(arvoreBST *raiz, tabela * tab);
 
 
 
