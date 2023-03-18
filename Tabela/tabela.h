@@ -1,6 +1,6 @@
 #ifndef TABELA_H
 #define TABELA_H
-#include "../BST/bst.h" 
+#include "../BST/bst.h"
 //#include "../AVL/avl.h"
 //#include "../RedBlack/RB.h"
 #include <stdlib.h>
@@ -23,6 +23,8 @@ typedef struct tabela{
 
 }tabela;
 
+void carregar_arquivo_BST(char *nome, arvoreBST* a);
+
 int inicializarTabela(tabela *tab);
 
 void finalizar (tabela *tab);
@@ -31,19 +33,21 @@ void adicionarCarro(tabela *tab, dado *carro);
 
 dado * procurarCarro(tabela *tab, char* modelo );
 
+//procurarCarro(tabela *tab ) --> para todo indice
+//buscar p todos os indices 
+
+
+
+
 dado * ler_dados();
-
-
 
 void tirar_enter(char *string);
 
 void salvar_arquivo_BST(char *nome, arvoreBST a);
 
-void salvar_auxiliar_BST(arvoreBST* raiz, FILE *arq);
+void salvar_auxiliar_BST(arvoreBST raiz, FILE *arq);
 
-arvoreBST carregar_arquivo_BST(char *nome, arvoreBST* a);
-
-void imprimir_elemento_BST(arvoreBST *raiz, tabela * tab);
+void imprimir_elemento_BST(arvoreBST raiz, tabela * tab);
 
 
 

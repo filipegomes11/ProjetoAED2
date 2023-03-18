@@ -3,26 +3,27 @@
 int main ()
 {
 
-  arvoreBST *raiz;
+  arvoreBST raiz;
   int inteiroTeste;
-  int v[] = {10, 20, 30, 17, 7, 9, 5};
+  char* v[] = {"10", "20", "30", "17", "7", "9", "5"};
+  
   int i;
   for(i = 0; i<7; i++){
-      raiz = inserirBST (raiz, v[i], inteiroTeste);
+      raiz = inserirBST (raiz, v[i], 1);
   }
-    int r[] = {9,10,17,7,20,5,30};
+    char* r[] = {"9","10","17","7","20","5","30"};
   for(i=0; raiz != NULL; i++)
     {
       
-      preorder (raiz);
+      preorderBST (raiz);
       printf ("\n");
-      inorder (raiz);
+      inorderBST (raiz);
       printf ("\n");
-      posorder (raiz);
+      posorderBST (raiz);
       raiz = removerBST (raiz, r[i]);
       printf ("\n");
       printf ("\n");
-      printf ("Remover: %d\n", r[i]);
+      printf ("Remover: %s\n", r[i]);
       printf ("\n");
     }
     printf("%p", raiz);

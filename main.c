@@ -18,30 +18,31 @@ int main() {
 		switch(opcao) {
 				int valor;
 				case 1:
-						printf("%d\n", alturaBST(&tab.indice_bst));
+						printf("%d\n", alturaBST(tab.indice_bst));
 						break;
 				case 2:	
 						
 						adicionarCarro(&tab, ler_dados());
 						break;
 				case 3:
-						printf("%s\n", maiorElementoBST(&tab.indice_bst)->modelo);
+						printf("%s\n", maiorElementoBST(tab.indice_bst));
 						break;
 				case 4:
-						printf("%s\n", menorElementoBST(&tab.indice_bst)->modelo);
+						printf("%s\n", menorElementoBST(tab.indice_bst));
 						break;
 				case 5:
-						preorderBST(&tab.indice_bst);
+						preorderBST(tab.indice_bst);
 						printf("\n");
 						break;
 				case 6:
-						inorderBST(&tab.indice_bst);
+						inorderBST(tab.indice_bst);
 						printf("\n");
 						break;
 				case 7:
-						posorderBST(&tab.indice_bst);
+						posorderBST(tab.indice_bst);
 						printf("\n");
 						break;
+						
 											
 
 				case 99:
