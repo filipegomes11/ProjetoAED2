@@ -4,6 +4,7 @@
         "bst.h": "c",
         "rb.h": "c",
         "stdlib.h": "c",
-        "tabela.h": "c"
+        "tabela.h": "c",
+        "stdio_ext.h": "c"
     }
 }

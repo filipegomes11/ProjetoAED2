@@ -24,6 +24,11 @@ void inorderBST  (arvoreBST raiz);
 
 void posorderBST (arvoreBST raiz);
 
+
+
+
+
+
 char *maiorElementoBST (arvoreBST raiz);
 char *menorElementoBST (arvoreBST raiz);
 

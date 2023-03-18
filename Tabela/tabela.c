@@ -1,5 +1,6 @@
 #include "tabela.h" 
-#include "../BST/bst.h"
+#include "../BST/bst.c"
+#include "../AVL/avl.c"
 #include <stdio.h>
 #include <string.h>
 
@@ -31,17 +32,21 @@ void adicionarCarro(tabela *tab, dado *carro){
             dado * novo = (dado *) malloc(sizeof(dado));
 			novo->modelo = carro->modelo;
 			
-			tab->indice_bst = inserirBST(tab->indice_bst, carro->modelo, posicaoNovoRegistro); 
-			
-			
+			tab->indice_bst = inserirBST(tab->indice_bst, carro->modelo, posicaoNovoRegistro);
 
-			/*dado2 * novo = (dado2 *) malloc(sizeof(dado2));
-			strcpy(novo->chave, livro->autor);
-			novo->indice = posicaoNovoRegistro;
-			tab->indice_bst = inserirBST(novo, tab->indice_bst);
-            */
+			
+			novo->marca = carro->marca;
+
+			tab->indice_avl = inserirAVL(&tab->indice_avl, carro->marca, posicaoNovoRegistro);
+
+			novo->estado = carro->estado;
+			novo->preco = carro->preco;
+			novo->codigo = carro->codigo;
+
+
 
 			fprintf(tab->arquivo_dados, "%s|%s|%s|%s|%f\n", carro->codigo,carro->modelo,carro->marca,carro->estado,carro->preco);
+			
     }
 }
 
@@ -111,7 +116,7 @@ void carregar_arquivo_BST(char *nome, arvoreBST* a){
     char* linha = malloc(len);
     char delim[] = ";"; 
     if(arq!= NULL){
-        while(getline(&linha, &len, arq)>0){ //nao entra no while (getline com problema?) 			
+        while(getline(&linha, &len, arq)>0){   			
             char* var = malloc(len);
             var = linha;
             char* ptr = strtok(var, delim);
@@ -171,4 +176,59 @@ void imprimir_elemento_BST(arvoreBST raiz, tabela * tab) {
 	printf("[%s, %s, %s, %s, %f ]\n", temp->codigo, temp->estado, temp->marca, temp->modelo, temp->preco);
 	free(temp);
 }
+
+
+
+void carregar_arquivo_AVL(char* nome, No* a){
+	FILE* arq;
+	
+    arq = fopen(nome, "r+");
+    size_t len = 50;
+    char* linha = malloc(len);
+    char delim[] = ";"; 
+    if(arq!= NULL){
+        while(getline(&linha, &len, arq)>0){   			
+            char* var = malloc(len);
+            var = linha;
+            char* ptr = strtok(var, delim);
+            int indice = atoi(ptr);
+            ptr = strtok(NULL, delim);
+            char* nome = (char*) malloc(sizeof(ptr));
+            strcpy(nome, ptr);
+            tirar_enter(nome);
+            a = inserirAVL(&a, nome, indice);
+			
+        }
+        fclose(arq);
+    }
+}
+
+void salvar_arquivo_AVL(char *nome, No* a){
+	FILE *arq;
+	arq = fopen(nome, "w+");
+	if(arq != NULL) {
+		salvar_auxiliar_AVL(a, arq);
+		fclose(arq);
+	}
+}
+
+void salvar_auxiliar_AVL(No* raiz, FILE *arq){
+	if(raiz != NULL) {
+		fprintf(arq, "%d;%s\n", raiz->indice, raiz->marca);
+		salvar_auxiliar_AVL(raiz->esq, arq);
+		salvar_auxiliar_AVL(raiz->dir, arq);
+	}
+}
+
+void imprimir_elemento_AVL(No* raiz, tabela * tab) {
+	dado * temp = (dado *) malloc (sizeof(dado));
+	fseek(tab->arquivo_dados, raiz->indice, SEEK_SET);
+	fread(temp, sizeof(dado), 1, tab->arquivo_dados);
+	printf("[%s, %s, %s, %s, %f ]\n", temp->codigo, temp->estado, temp->marca, temp->modelo, temp->preco);
+	free(temp);
+}
+
+
+
+
 
