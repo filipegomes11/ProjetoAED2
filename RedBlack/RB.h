@@ -17,7 +17,7 @@ typedef struct arvore {
 
 void rotacao_esquerdaRB(arvoreRB *T, noRB *x);
 void rotacao_direitaRB(arvoreRB *T, noRB *x);
-void inserirRB(arvoreRB *T, int a);
+arvoreRB *inserirRB(arvoreRB **T, char* estado, int b);
 void inserirRB_corrigir(arvoreRB *T, noRB *z);
 void transplantRB(arvoreRB *T, noRB *u, noRB *v);
 noRB *minimoRB(noRB *x);

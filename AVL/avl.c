@@ -4,11 +4,18 @@
 
 
 int alturaAVL(No *no) {
-    if (no == NULL) {
-        return -1;
-    } else {
-        return no->alturaAVL;
+    if(no == NULL) {
+		return 0;
+	}
+	return 1 + maiorAVL(alturaAVL(no->dir), alturaAVL(no->esq));
     }
+
+
+int maiorAVL(int a, int b) {
+	if(a > b)
+		return a;
+	else
+		return b;
 }
 
 int max(int a, int b) {
@@ -47,36 +54,38 @@ No *rotacaoDuplaDireitaAVL(No *no) {
     return rotacaoDireitaAVL(no);
 }
 
-No *inserirAVL(No **raiz, char *marca, int posicao) {
-    if (*raiz == NULL) {
-        No *no = (No*) malloc(sizeof (No));
+arvoreAVL inserirAVL(arvoreAVL raiz, char *marca, int posicao) {
+    if (raiz == NULL) {
+
+        arvoreAVL no = (No*) malloc(sizeof (No));
         no->marca = marca;
         no->indice = posicao;
         no->alturaAVL = 0;
         no->esq = NULL;
         no->dir = NULL;
-        *raiz = no;
-    } else if (strcmp(marca , (*raiz)->marca)<0) {
-        (*raiz)->esq = inserirAVL(&(*raiz)->esq, marca, posicao);
-        if (alturaAVL((*raiz)->esq) - alturaAVL((*raiz)->dir) == 2) {
-            if (strcmp(marca , (*raiz)->esq->marca)<0) {
-                *raiz = rotacaoDireitaAVL(*raiz);
+        raiz = no;
+       
+    } else if (strcmp(marca , raiz->marca)<0) {
+        raiz->esq = inserirAVL(raiz->esq, marca, posicao);
+        if (alturaAVL((raiz)->esq) - alturaAVL((raiz)->dir) == 2) {
+            if (strcmp(marca , raiz->esq->marca)<0) {
+                raiz = rotacaoDireitaAVL(raiz);
             } else {
-                *raiz = rotacaoDuplaDireitaAVL(*raiz);
+                raiz = rotacaoDuplaDireitaAVL(raiz);
             }
         }
-    } else if (strcmp(marca , (*raiz)->marca)>0) {
-        (*raiz)->dir = inserirAVL(&(*raiz)->dir, marca, posicao);
-        if (alturaAVL((*raiz)->dir) - alturaAVL((*raiz)->esq) == 2) {
-            if (strcmp(marca , (*raiz)->dir->marca)>0) {
-                *raiz = rotacaoEsquerdaAVL(*raiz);
+    } else if (strcmp(marca , (raiz)->marca)>0) {
+        raiz->dir = inserirAVL(raiz->dir, marca, posicao);
+        if (alturaAVL(raiz->dir) - alturaAVL(raiz->esq) == 2) {
+            if (strcmp(marca , raiz->dir->marca)>0) {
+                raiz = rotacaoEsquerdaAVL(raiz);
             } else {
-                *raiz = rotacaoDuplaEsquerdaAVL(*raiz);
+                raiz = rotacaoDuplaEsquerdaAVL(raiz);
             }
         }
 }
-    (*raiz)->alturaAVL = max(alturaAVL((*raiz)->esq), alturaAVL((*raiz)->dir)) + 1;
-    return *raiz;
+    (raiz)->alturaAVL = max(alturaAVL(raiz->esq), alturaAVL(raiz->dir) + 1);
+    return raiz;
 
     
 }

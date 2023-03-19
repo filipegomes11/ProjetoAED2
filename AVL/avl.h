@@ -11,6 +11,8 @@ typedef struct no {
     int indice;
 } No;
 
+typedef No *arvoreAVL;
+
 
 
 
@@ -20,14 +22,16 @@ No *rotacaoEsquerdaAVL(No *no);
 No *rotacaoDireitaAVL(No *no);
 No *rotacaoDuplaEsquerdaAVL(No *no);
 No *rotacaoDuplaDireitaAVL(No *no);
-No *inserirAVL( No **raiz, char *marca, int posicao);
+
+arvoreAVL inserirAVL( arvoreAVL raiz, char *marca, int posicao);
 No *removerAVL(No *no, char* marca);
 void imprimir(No *no);
 No *preorderAVL (No * raiz);
 No *inorderAVL (No * raiz);
 No *posorderAVL (No * raiz);
 
-
+int maiorAVL(int a, int b);
+	
 
 
 

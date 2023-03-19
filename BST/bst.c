@@ -58,7 +58,7 @@ void inorderBST (arvoreBST raiz)
   if (raiz != NULL)
     {
       inorderBST (raiz->esq);
-      printf ("%s ", raiz->modelo);
+      printf ("%s ", raiz->modelo); // colocar o carro todo 
       inorderBST (raiz->dir);
     }
 

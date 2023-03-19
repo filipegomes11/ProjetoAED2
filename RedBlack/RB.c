@@ -39,18 +39,19 @@ void rotacao_direitaRB(arvoreRB *T, noRB *x) {
 }
 
 
-
-void inserirRB(arvoreRB *T, int a) {
-    noRB *y = NULL;
-    noRB *x = T->raiz;
-    noRB *z = (noRB*)malloc(sizeof(noRB));
-    z->estado = a;
+arvoreRB* inserirRB(arvoreRB **T, char* estado, int b) {
+    noRB *z = (noRB*) malloc(sizeof (noRB));
+    z->estado = estado;
+    z->cor = 1;
     z->esq = NULL;
     z->dir = NULL;
-    z->cor = 1;
+    z->pai = NULL;
+    z->indice = b;
+    noRB *y = NULL;
+    noRB *x = (*T)->raiz;
     while (x != NULL) {
         y = x;
-        if (strcmp(z->estado , x->estado)<0) {
+        if (z->indice < x->indice) {
             x = x->esq;
         } else {
             x = x->dir;
@@ -58,21 +59,23 @@ void inserirRB(arvoreRB *T, int a) {
     }
     z->pai = y;
     if (y == NULL) {
-        T->raiz = z;
-    } else if (strcmp(z->estado , y->estado)<0) {
+        (*T)->raiz = z;
+    } else if (z->indice < y->indice) {
         y->esq = z;
     } else {
         y->dir = z;
     }
-    
-    inserirRB_corrigir(T, z);
+    inserirRB_corrigir(*T, z);
+    return *T;
 }
+    
 
-void inserirRB_corrigir(arvoreRB *T, noRB *z) {
-    while (z->pai != NULL && z->pai->cor == 1) {
+    
+void inserirRB_corrigir(arvoreRB *T, noRB *z){
+    while (z->pai->cor == 1) {
         if (z->pai == z->pai->pai->esq) {
             noRB *y = z->pai->pai->dir;
-            if (y != NULL && y->cor == 1) {
+            if (y->cor == 1) {
                 z->pai->cor = 0;
                 y->cor = 0;
                 z->pai->pai->cor = 1;
@@ -88,7 +91,7 @@ void inserirRB_corrigir(arvoreRB *T, noRB *z) {
             }
         } else {
             noRB *y = z->pai->pai->esq;
-            if (y != NULL && y->cor == 1) {
+            if (y->cor == 1) {
                 z->pai->cor = 0;
                 y->cor = 0;
                 z->pai->pai->cor = 1;
@@ -219,7 +222,7 @@ void removerRB_corrigir(arvoreRB *T, noRB *x) {
 void inoRBrderRB(arvoreRB *T, noRB *x) {
     if (x != NULL) {
         inoRBrderRB(T, x->esq);
-        printf("%d - %d | ", x->estado,x->cor);
+        printf("%s\n", x->estado);
         
         
         inoRBrderRB(T, x->dir);
@@ -229,7 +232,7 @@ void inoRBrderRB(arvoreRB *T, noRB *x) {
 
 void preorderRB(arvoreRB *T, noRB *x) {
     if (x != NULL) {
-        printf("%d - %d | ", x->estado,x->cor);
+        printf("%s\n", x->estado);
         preorderRB(T, x->esq);
         
         preorderRB(T, x->dir);
@@ -240,7 +243,7 @@ void posorderRB(arvoreRB *T, noRB *x) {
     if (x != NULL) {
         posorderRB(T, x->dir);
         posorderRB(T, x->esq);
-        printf("%d - %d | ", x->estado,x->cor);
+        printf("%s", x->estado);
     
         
     }
