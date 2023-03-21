@@ -1,253 +1,405 @@
-#include <stdio.h>
 #include "RB.h"
+#include <stdio.h>
+#include <string.h>
 
+arvoreRB no_null;
 
-void rotacao_esquerdaRB(arvoreRB *T, noRB *x) {
-    noRB*y = x->dir;
-    x->dir = y->esq;
-    if (y->esq != NULL) {
-        y->esq->pai = x;
-    }
-    y->pai = x->pai;
-    if (x->pai == NULL) {
-        T->raiz = y;
-    } else if (x == x->pai->esq) {
-        x->pai->esq = y;
-    } else {
-        x->pai->dir = y;
-    }
-    y->esq = x;
-    x->pai = y;
+void init_arvoreRB(arvoreRB *raiz) {
+	*raiz = NULL;
+    no_null = (arvoreRB) malloc(sizeof(arvoreRB));
+	no_null->cor = DUPLO_PRETO;
+	no_null->info = NULL;
+    no_null->esq = no_null->dir = NULL;
 }
 
-void rotacao_direitaRB(arvoreRB *T, noRB *x) {
-    noRB *y = x->esq;
-    x->esq = y->dir;
-    if (y->dir != NULL) {
-        y->dir->pai = x;
-    }
-    y->pai = x->pai;
-    if (x->pai == NULL) {
-        T->raiz = y;
-    } else if (x == x->pai->dir) {
-        x->pai->dir = y;
-    } else {
-        x->pai->esq = y;
-    }
-    y->dir = x;
-    x->pai = y;
-}
+void inserir(arvoreRB* raiz, char* info, int indice) {
 
-
-arvoreRB* inserirRB(arvoreRB **T, char* estado, int b) {
-    noRB *z = (noRB*) malloc(sizeof (noRB));
-    z->estado = estado;
-    z->cor = 1;
-    z->esq = NULL;
-    z->dir = NULL;
-    z->pai = NULL;
-    z->indice = b;
-    noRB *y = NULL;
-    noRB *x = (*T)->raiz;
-    while (x != NULL) {
-        y = x;
-        if (z->indice < x->indice) {
-            x = x->esq;
-        } else {
-            x = x->dir;
-        }
-    }
-    z->pai = y;
-    if (y == NULL) {
-        (*T)->raiz = z;
-    } else if (z->indice < y->indice) {
-        y->esq = z;
-    } else {
-        y->dir = z;
-    }
-    inserirRB_corrigir(*T, z);
-    return *T;
-}
     
 
-    
-void inserirRB_corrigir(arvoreRB *T, noRB *z){
-    while (z->pai->cor == 1) {
-        if (z->pai == z->pai->pai->esq) {
-            noRB *y = z->pai->pai->dir;
-            if (y->cor == 1) {
-                z->pai->cor = 0;
-                y->cor = 0;
-                z->pai->pai->cor = 1;
-                z = z->pai->pai;
-            } else {
-                if (z == z->pai->dir) {
-                    z = z->pai;
-                    rotacao_esquerdaRB(T, z);
-                }
-                z->pai->cor = 0;
-                z->pai->pai->cor = 1;
-                rotacao_direitaRB(T, z->pai->pai);
-            }
-        } else {
-            noRB *y = z->pai->pai->esq;
-            if (y->cor == 1) {
-                z->pai->cor = 0;
-                y->cor = 0;
-                z->pai->pai->cor = 1;
-                z = z->pai->pai;
-            } else {
-                if (z == z->pai->esq) {
-                    z = z->pai;
-                    rotacao_direitaRB(T, z);
-                }
-                z->pai->cor = 0;
-                z->pai->pai->cor = 1;
-                rotacao_esquerdaRB(T, z->pai->pai);
-            }
-        }
-    }
-    T->raiz->cor = 0;
-}
 
-void transplantRB(arvoreRB *T, noRB *u, noRB *v) {
-    if (u->pai == NULL) {
-        T->raiz = v;
-    } else if (u == u->pai->esq) {
-        u->pai->esq = v;
+
+    arvoreRB cont = *raiz, pai = NULL, no;
+
+
+    while (cont != NULL) {
+        pai = cont;
+        
+        if (strcmp(info , cont->info) > 0)
+            cont = cont->dir;
+        else
+            cont = cont->esq;
+    }
+
+    no = (arvoreRB) malloc(sizeof(noarvoreRB));
+    no->info = (char*) malloc(sizeof(char) * (strlen(info) + 1));
+
+    strcpy(no->info , info);
+
+    no->esq = no->dir = NULL;
+    no->cor = VERMELHO;
+    no->pai = pai;
+    no->indice = indice;
+
+
+    if(eh_raiz(no)) {
+        no->cor = PRETO;
+        *raiz = no;
+
     } else {
-        u->pai->dir = v;
+        if (strcmp(info , no->pai->info) > 0) 
+            no->pai->dir = no;
+
+        else
+            no->pai->esq = no;
     }
-    if (v != NULL) {
-        v->pai = u->pai;
-    }
+    correcao(raiz, no);
+
+
 }
 
-noRB *minimoRB(noRB *x) {
-    while (x->esq != NULL) {
-        x = x->esq;
-    }
-    return x;
-}
+void correcao(arvoreRB* raiz, arvoreRB no) {
 
-void removerRB(arvoreRB *T, noRB *z) {
-    noRB *y = z;
-    int y_original_cor = y->cor;
-    noRB *x;
-    if (z->esq == NULL) {
-        x = z->dir;
-        transplantRB(T, z, z->dir);
-    } else if (z->dir == NULL) {
-        x = z->esq;
-        transplantRB(T, z, z->esq);
-    } else {
-        y = minimoRB(z->dir);
-        y_original_cor = y->cor;
-        x = y->dir;
-        if (y->pai == z) {
-            x->pai = y;
+    while(cor(no->pai) == VERMELHO && cor(no) == VERMELHO){
+        if(cor(tio(no)) == VERMELHO) {
+            no->pai->cor = tio(no)->cor = PRETO;
+            no->pai->pai->cor = VERMELHO;
+            no = no->pai->pai;
+            continue;
         } else {
-            transplantRB(T, y, y->dir);
-            y->dir = z->dir;
-            y->dir->pai = y;
-        }
-        transplantRB(T, z, y);
-        y->esq = z->esq;
-        y->esq->pai = y;
-        y->cor = z->cor;
-    }
-    if (y_original_cor == 0) {
-        removerRB_corrigir(T, x);
-    }
-}
-
-
-
-void removerRB_corrigir(arvoreRB *T, noRB *x) {
-    while (x != T->raiz && x->cor == 0) {
-        if (x == x->pai->esq) {
-            noRB *w = x->pai->dir;
-            if (w->cor == 1) {
-                w->cor = 0;
-                x->pai->cor = 1;
-                rotacao_esquerdaRB(T, x->pai);
-                w = x->pai->dir;
+            if(eh_esq(no) && eh_esq(no->pai)) {
+                no->pai->cor = PRETO;
+                no->pai->pai->cor = VERMELHO;
+                rotacao_simples_dir(raiz, no->pai->pai);
+                continue;
             }
-            if (w->esq->cor == 0 && w->dir->cor == 0) {
-                w->cor = 1;
-                x = x->pai;
-            } else {
-                if (w->dir->cor == 0) {
-                    w->esq->cor = 0;
-                    w->cor = 1;
-                    rotacao_direitaRB(T, w);
-                    w = x->pai->dir;
-                }
-                w->cor = x->pai->cor;
-                x->pai->cor = 0;
-                w->dir->cor = 0;
-                rotacao_esquerdaRB(T, x->pai);
-                x = T->raiz;
+            if(!eh_esq(no) && !eh_esq(no->pai)) {
+                no->pai->cor = PRETO;
+                no->pai->pai->cor = VERMELHO;
+                rotacao_simples_esq(raiz, no->pai->pai);
+                continue;
             }
-        } else {
-            noRB *w = x->pai->esq;
-            if (w->cor == 1) {
-                w->cor = 0;
-                x->pai->cor = 1;
-                rotacao_direitaRB(T, x->pai);
-                w = x->pai->esq;
+            if(eh_esq(no) && !eh_esq(no->pai)) {
+                no->cor = PRETO;
+                no->pai->pai->cor = VERMELHO;
+                rotacao_dupla_esq(raiz, no->pai->pai);
+                continue;
             }
-            if (w->dir->cor == 0 && w->esq->cor == 0) {
-                w->cor = 1;
-                x = x->pai;
-            } else {
-                if (w->esq->cor == 0) {
-                    w->dir->cor = 0;
-                    w->cor = 1;
-                    rotacao_esquerdaRB(T, w);
-                    w = x->pai->esq;
-                }
-                w->cor = x->pai->cor;
-                x->pai->cor = 0;
-                w->esq->cor = 0;
-                rotacao_direitaRB(T, x->pai);
-                x = T->raiz;
+            if(!eh_esq(no) && eh_esq(no->pai)) {
+                no->cor = PRETO;
+                no->pai->pai->cor = VERMELHO;
+                rotacao_dupla_dir(raiz, no->pai->pai);
+                continue;
             }
         }
     }
-    x->cor = 0;
+    (*raiz)->cor = PRETO;
 }
 
+void rotacao_simples_esq(arvoreRB* raiz, arvoreRB no) {
+	arvoreRB u = no->dir,
+		t2 = u->esq;
+    int ehesq = eh_esq(no);
 
-void inoRBrderRB(arvoreRB *T, noRB *x) {
-    if (x != NULL) {
-        inoRBrderRB(T, x->esq);
-        printf("%s\n", x->estado);
-        
-        
-        inoRBrderRB(T, x->dir);
-    }
-}
-
-
-void preorderRB(arvoreRB *T, noRB *x) {
-    if (x != NULL) {
-        printf("%s\n", x->estado);
-        preorderRB(T, x->esq);
-        
-        preorderRB(T, x->dir);
-    }
-}
-
-void posorderRB(arvoreRB *T, noRB *x) {
-    if (x != NULL) {
-        posorderRB(T, x->dir);
-        posorderRB(T, x->esq);
-        printf("%s", x->estado);
+    no->dir = t2;
+	
+    	
+    if(t2 != NULL)
+		t2->pai = no;
     
-        
+    u->esq = no;
+	u->pai = no->pai;
+    no->pai = u;
+
+	if(eh_raiz(u))
+		*raiz = u;
+	else {
+		if(ehesq)
+			u->pai->esq = u;
+		else
+		    u->pai->dir = u;
+	}
+}
+
+void rotacao_simples_dir(arvoreRB* raiz, arvoreRB no) {
+	arvoreRB u = no->esq,
+		t2 = u->dir;
+    int ehesq = eh_esq(no);
+
+    no->esq = t2;
+	u->dir = no;
+    
+    if(t2 != NULL)
+		t2->pai = no;
+	u->pai = no->pai;
+    no->pai = u;
+
+	if(eh_raiz(u))
+		*raiz = u;
+	else {
+		if(ehesq)
+			u->pai->esq = u;
+		else
+		    u->pai->dir = u;
+	}
+}
+
+void rotacao_dupla_esq(arvoreRB* raiz, arvoreRB no) {
+	rotacao_simples_dir(raiz, no->dir);
+	rotacao_simples_esq(raiz, no);
+}
+
+void rotacao_dupla_dir(arvoreRB* raiz, arvoreRB no) {
+	rotacao_simples_esq(raiz, no->esq);
+	rotacao_simples_dir(raiz, no);
+}
+
+int maior(int a, int b) {
+    return a > b ? a : b;
+}
+
+int altura(arvoreRB raiz) {
+	if (raiz == NULL){
+		return 0;
+	} else {
+		int aesq = altura(raiz->esq) + 1, adir = altura(raiz->dir) + 1;
+		return aesq > adir ? aesq : adir;
+	}
+}
+
+int eh_raiz(arvoreRB no) {
+    return no->pai == NULL;
+}
+
+int eh_esq(arvoreRB no) {
+	return (!eh_raiz(no) && no->pai->esq == no);
+}
+
+enum cor cor(arvoreRB no) {
+    return no == NULL ? PRETO : no->cor;
+}
+
+arvoreRB irmao(arvoreRB no) {
+    return eh_esq(no) ? no->pai->dir : no->pai->esq;
+}
+
+arvoreRB tio(arvoreRB no) {
+    return irmao(no->pai);
+}
+
+void imprimir_elemento(arvoreRB no) {
+	switch(no->cor){
+		case PRETO:
+			printf("[%s] -> ", no->info);
+			break;
+		case VERMELHO:
+			printf("\x1b[31m[%s]\x1b[0m  -> ", no->info);
+			break;
+		case DUPLO_PRETO:
+			printf("\x1b[32m[%s]\x1b[0m  -> ", no->info);
+			break;
+	}
+}
+
+void remover(arvoreRB *raiz, arvoreRB *raiz_relativa, char* info) {
+	arvoreRB cont = *raiz_relativa;
+
+	while(cont != NULL) {
+		if(strcmp(info , cont->info) == 0) {
+
+            if(cont->esq != NULL && cont->dir != NULL) { 
+    			strcpy(cont->info , (maior_elemento(cont->esq))->info);
+	    		remover(raiz, &cont->esq, cont->info);
+                break;
+            }
+            arvoreRB aux;
+			if(cont->esq == NULL && cont->dir != NULL) {
+				aux = cont->dir;
+                if(aux->esq != NULL)
+                    aux->esq->pai = cont;
+                if(aux->dir != NULL)
+                    aux->dir->pai = cont;
+                strcpy(cont->info , aux->info);
+                cont->esq = aux->esq;
+                cont->dir = aux->dir;
+                free(aux);
+				break;
+			}
+
+			if(cont->esq != NULL && cont->dir == NULL) {
+				aux = cont->esq;
+                if(aux->esq != NULL)
+                    aux->esq->pai = cont;
+                if(aux->dir != NULL)
+                    aux->dir->pai = cont;
+                strcpy(cont->info , aux->info);
+                cont->esq = aux->esq;
+                cont->dir = aux->dir;
+                free(aux);
+				break;
+			}
+
+			if(cont->esq == NULL && cont->dir == NULL) {			
+				if(eh_raiz(cont)) {
+					*raiz = NULL;
+					break;
+				}
+				if(cont->cor == VERMELHO) {
+                    if(eh_esq(cont))
+						cont->pai->esq = NULL;
+					else
+						cont->pai->dir = NULL;
+                    free(cont);
+                    cont = NULL;
+					break;
+				} else {
+				    no_null->pai = cont->pai;
+                    if(eh_esq(cont))
+                        cont->pai->esq = no_null;
+                    else
+                        cont->pai->dir = no_null;
+                    reajustar(raiz, no_null);
+				    break;
+				}
+			}
+		}	
+		if(strcmp(info , cont->info) > 0) 
+			cont = cont->dir;
+		else 
+			cont = cont->esq;
+	}
+}
+
+void reajustar(arvoreRB *raiz, arvoreRB no){
+	if(eh_raiz(no)) {
+        printf("\nCASO 1\n");
+		no->cor = PRETO;
+        if(no == no_null)
+            *raiz = NULL;
+		return;
+	}
+    
+	if(cor(no->pai) == PRETO &&
+	   cor(irmao(no)) == VERMELHO &&
+	   cor(irmao(no)->dir) == PRETO &&
+	   cor(irmao(no)->esq) == PRETO) {
+        printf("\nCASO 2\n");
+		if(eh_esq(no))
+			rotacao_simples_esq(raiz, no->pai);
+		else
+			rotacao_simples_dir(raiz, no->pai);	
+		no->pai->pai->cor = PRETO;
+		no->pai->cor = VERMELHO;
+        reajustar(raiz, no);
+		return;
+	}
+	
+
+    if(cor(irmao(no)) == PRETO) {
+
+        if(cor(no->pai) == PRETO
+        && cor(irmao(no)->dir) == PRETO
+        && cor(irmao(no)->esq) == PRETO) {
+            printf("\nCASO 3\n");
+            no->pai->cor = DUPLO_PRETO;
+            irmao(no)->cor = VERMELHO;
+            if(eh_esq(no))
+                no->pai->esq = NULL;
+            else
+                no->pai->dir = NULL;
+            reajustar(raiz, no->pai);
+            no->pai = NULL;
+            return;
+	    }
+
+        if(cor(no->pai) == VERMELHO
+        && cor(irmao(no)->dir) == PRETO
+        && cor(irmao(no)->esq) == PRETO) {
+            printf("\nCASO 4\n");
+            irmao(no)->cor = VERMELHO;
+            no->pai->cor = PRETO;
+            if(eh_esq(no))
+                no->pai->esq = NULL;
+            else
+                no->pai->dir = NULL;
+            no->pai = NULL;
+            return;
+        }
+
+        if(eh_esq(no)){
+            if(cor(irmao(no)->esq) == VERMELHO && cor(irmao(no)->dir) == PRETO){
+                printf("\nCASO 5A\n");
+                irmao(no)->cor = VERMELHO;
+                irmao(no)->esq->cor = PRETO;
+                rotacao_simples_dir(raiz, irmao(no));
+                reajustar(raiz, no);
+                return;
+            }
+
+            if(cor(irmao(no)->dir) == VERMELHO){
+                printf("\nCASO 6A\n");
+                irmao(no)->cor = no->pai->cor;
+                irmao(no)->dir->cor = PRETO;
+                no->pai->cor = PRETO;
+                rotacao_simples_esq(raiz, no->pai);
+                no->pai->esq = NULL;
+                no->pai = NULL;
+                return;
+            }
+        } else {
+            if(cor(irmao(no)->dir) == VERMELHO && cor(irmao(no)->esq) == PRETO) {
+                printf("\nCASO 5B\n");
+                irmao(no)->cor = VERMELHO;
+                irmao(no)->dir->cor = PRETO;
+                rotacao_simples_esq(raiz, irmao(no));
+                reajustar(raiz, no);
+                return;
+            }
+
+            if(cor(irmao(no)->esq) == VERMELHO){
+                printf("\nCASO 6B\n");
+                irmao(no)->cor = no->pai->cor;
+                irmao(no)->esq->cor = PRETO;
+                no->pai->cor = PRETO;
+                rotacao_simples_dir(raiz, no->pai);
+                no->pai->dir = NULL;
+                no->pai = NULL;
+                return;
+            }
+        }
+
     }
 }
 
+void preorder (arvoreRB raiz) {
+  if (raiz != NULL) {
+      imprimir_elemento(raiz);
+      preorder (raiz->esq);
+      preorder (raiz->dir);
+    }
+}
 
+void inorder (arvoreRB raiz) {
+  if (raiz != NULL) {
+      inorder (raiz->esq);
+      imprimir_elemento(raiz);
+      inorder (raiz->dir);
+    }
+}
 
+void posorder (arvoreRB raiz) {
+  if (raiz != NULL) {
+      posorder (raiz->esq);
+      posorder (raiz->dir);
+      imprimir_elemento(raiz);
+    }
+}
+
+arvoreRB maior_elemento(arvoreRB raiz) {
+  if (raiz == NULL)
+    return NULL;
+
+  if (raiz->dir == NULL)
+    return raiz;
+
+  return maior_elemento (raiz->dir);
+}

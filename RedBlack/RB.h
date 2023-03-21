@@ -1,36 +1,44 @@
 #ifndef RB_H
 #define RB_H
+
 #include <stdlib.h>
 
-typedef struct noRB {
-    char *estado;
-    int cor;
-    struct noRB *esq;
-    struct noRB *dir;
-    struct noRB *pai;
+enum cor { VERMELHO, PRETO, DUPLO_PRETO };
+
+typedef struct noarvoreRB {
+	char* info;
+	enum cor cor;
+	struct noarvoreRB *esq, *dir, *pai;
     int indice;
-} noRB;
+} noarvoreRB;
 
-typedef struct arvore {
-    noRB*raiz;
-} arvoreRB;
+typedef noarvoreRB* arvoreRB;
 
-void rotacao_esquerdaRB(arvoreRB *T, noRB *x);
-void rotacao_direitaRB(arvoreRB *T, noRB *x);
-arvoreRB *inserirRB(arvoreRB **T, char* estado, int b);
-void inserirRB_corrigir(arvoreRB *T, noRB *z);
-void transplantRB(arvoreRB *T, noRB *u, noRB *v);
-noRB *minimoRB(noRB *x);
-void removerRB(arvoreRB *T, noRB *z);
-void removerRB_corrigir(arvoreRB *T, noRB *x);
-void preorderRB(arvoreRB *T, noRB *x);
-void inoRBrderRB(arvoreRB *T, noRB *x);
-void posorderRB(arvoreRB *T, noRB *x);
+void init_arvoreRB(arvoreRB* raiz);
+void inserir(arvoreRB* raiz, char* info, int indice);
+void remover(arvoreRB* raiz, arvoreRB* raiz_relativa, char* info);
 
+void correcao(arvoreRB* raiz, arvoreRB no);
+void reajustar(arvoreRB *raiz, arvoreRB no);
+void rotacao_simples_esq(arvoreRB* raiz, arvoreRB no);
+void rotacao_simples_dir(arvoreRB* raiz, arvoreRB no);
+void rotacao_dupla_dir(arvoreRB* raiz, arvoreRB no);
+void rotacao_dupla_esq(arvoreRB* raiz, arvoreRB no);
+void preorder(arvoreRB raiz);
+void inorder(arvoreRB raiz);
+void posorder(arvoreRB raiz);
+void imprimir_elemento(arvoreRB no);
 
+int altura(arvoreRB raiz);
+int maior(int a, int b);
+arvoreRB maior_elemento (arvoreRB raiz);
+//arvoreRB menor_elemento (arvoreRB raiz);
+
+enum cor cor(arvoreRB no);
+int eh_raiz(arvoreRB no);
+int eh_esq(arvoreRB no);
+arvoreRB irmao(arvoreRB no);
+arvoreRB tio(arvoreRB no);
+//void retira_duplo_preto(arvoreRB *raiz, arvoreRB no);
 
 #endif
-
-
-
-

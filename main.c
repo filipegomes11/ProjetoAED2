@@ -11,6 +11,7 @@
 int main() {
 	tabela tab;
 	int opcao;
+	
 	printf("Inicializando tabela...\n");
 
 	inicializarTabela(&tab);
@@ -18,37 +19,22 @@ int main() {
 	printf("Tabela inicializada com sucesso!\n");
 
 	printf("Digite a opcao desejada:\n");
-	printf("1 - Altura da arvore BST\n");
-	printf("2 - Adicionar carro\n");
-	printf("3 - Maior elemento da arvore BST\n");
-	printf("4 - Menor elemento da arvore BST\n");
-	printf("5 - Preorder da arvore BST\n");
-	printf("6 - Inorder da arvore BST\n");
-	printf("7 - Posorder da arvore BST\n");
-	printf("8 - Altura da arvore AVL\n");
-	printf("9 - Maior elemento da arvore AVL\n");
-	printf("10 - Menor elemento da arvore AVL\n");
-	printf("11 - Preorder da arvore AVL\n");
-	printf("12 - Inorder da arvore AVL\n");
-	printf("13 - Posorder da arvore AVL\n");
-	printf("14 - imprimir carro\n");
-	printf("15 - Maior elemento da arvore RB\n");
-	printf("16 - Menor elemento da arvore RB\n");
-	printf("17 - Preorder da arvore RB\n");
-	printf("18 - Inorder da arvore RB\n");
-	printf("19 - Posorder da arvore RB\n");
-	printf("20 - Procurar carro por modelo\n");
-	printf("21 - Procurar carro por marca\n");
-	printf("22 - Procurar carro por estado\n");
-	printf("23 - Procurar carro por preco\n");
+	printf("1 - Adicionar carro\n");
+	printf("2 - Remover Carro pelo modelo\n");
+	printf("3 - Remover Carro pela marca \n");
+	printf("4 - Remover Carro pelo estado\n");
+	printf("5 - inordem BST \n");
+	printf("6 - inordem AVL\n");
+	printf("7 - inordem RB\n");
+	printf("8 - Buscar carro por modelo\n");
+	printf("9 - Buscar carro por marca\n");
+	printf("10 - Buscar carro por estado\n");
+	printf("11 - listar todos\n"); 
+	printf("12 - sobre o desenvolvedor\n");
+	printf("13 - sobre o projeto\n");
+	printf("14 link do repositorio no github e linkedin\n");
+	
 
-	printf("25 - Remover carro por modelo\n");
-	printf("26 - Remover carro por marca\n");
-	printf("27 - Remover carro por estado\n");
-
-	printf("30 - Imprimir tabela\n");
-	printf("31 - Salvar tabela\n");
-	printf("32 - Carregar tabela\n");
 	printf("99 - Sair\n");
 
 
@@ -59,90 +45,113 @@ int main() {
 
 		switch(opcao) {
 				int valor;
-				case 2:	
+				case 1:	
 						
 						adicionarCarro(&tab, ler_dados());
+						puts("Carro adicionado com sucesso!");
 						break;
+		
 
-				case 25:
+				case 2:
 						printf("Digite o modelo do carro:\n");
-						char modelo2[50];						// erro de segmentacao 
-						scanf("%s", modelo2);
-						removerCarroPorModelo(&tab, modelo2);
-						break;
-
-				case 26:
-						printf("Digite a marca do carro:\n");
-						char marca2[50];						// erro de segmentacao 
-						scanf("%s", marca2);
-						removerCarroPorMarca(&tab, marca2);
-						break;
-
-				case 27:
-						printf("Digite o estado do carro:\n");
-						char estado2[50];						// erro de segmentacao 
-						scanf("%s", estado2);
-						removerCarroPorEstado(&tab, estado2);
-						break;		
-
-						
-				case 1:
-						inorderBST(tab.indice_bst);
-						printf("\n");
-						break;
-				
-				
-
-				case 12: 
-
-						inorderAVL(tab.indice_avl);
-						printf("\n");				//loop infinito
-						break;
-
-
-			
-
-				case 18:
-						inorderRB(tab.indice_rb);
-						printf("\n");
-						break;
-
-			
-
-				case 20:
-						printf("Digite o modelo do carro:\n");
-						char modelo[50];
+						char modelo[50];					
 						scanf("%s", modelo);
-						buscarCarroPorModelo(&tab, modelo);  // erro de segmentacao 
+						removerCarroIndiceBST(&tab, modelo);  
+						salvar_arquivo_BST("indicesBST.dat", tab.indice_bst);	
+						puts("Carro removido em indicesBST.dat com sucesso!");						
 						break;
 
-				case 21:
+				case 3:
 						printf("Digite a marca do carro:\n");
 						char marca[50];
-						scanf("%s", marca);						// erro de segmentacao 
-						buscarCarroPorMarca(&tab, marca);
-						break;																								
-
-				case 22:
-						printf("Digite o estado do carro:\n");
-						char estado[50];
-						scanf("%s", estado);
-						buscarCarroPorEstado(&tab, estado);
+						scanf("%s", marca);						
+						removerCarroIndiceAVL(&tab, marca);
+						salvar_arquivo_AVL("indicesAVL.dat", tab.indice_avl);
+						puts("Carro removido em indicesAVL.dat com sucesso!");
 						break;
 
-	
+				case 4:
+						printf("Digite o estado do carro:\n");
+						char estado [50];
+						scanf("%s", estado);
+						removerCarroPeloIndiceRB(&tab, estado);
+						salvar_arquivo_RB("indicesRB.dat", tab.indice_rb);
+						puts("Carro removido em indicesRB.dat com sucesso!");
 
-			
+
+						break;
+
+
+				
+				
+						
+				case 5:
+						inorderBST(tab.indice_bst);
+						printf("\n");
+						break;								
+				case 6: 
+
+						inorderAVL(tab.indice_avl);
+						printf("\n");				
+						break;
+				case 7:
+						inorder(tab.indice_rb); ; 
+						printf("\n");
+						break;
+				case 8:
+						printf("Digite o modelo do carro:\n");
+						char model[50];					
+						scanf("%s", model);
+						procurarCarroIndiceBST(&tab, model);  
+						break;
+				case 9:
+						printf("Digite a marca do carro:\n");
+						char brand[50];
+						scanf("%s", brand);						
+						procurarCarroIndiceAVL(&tab, brand);
+						break; 																								
+
+				case 10:
+						printf("Digite o estado do carro:\n");
+						char status [50];
+						scanf("%s", status);
+						procurarCarroIndiceRB(&tab, status);
+						break;
+
+				case 11:
+						listarTodos(&tab);
+
+				case 12:												
+						puts("Desenvolvido por Filipe Gomes, estudante do terceiro periodo em Ciencia da computacao na Universidade Federal do Agreste de Pernambuco e estagiario em Cloud & DevSecOps na compass UOL. \n");
+						
+						
+						break;	
+
+				case 13:
+						puts("O projeto consiste em um sistema de gerenciamento de carros, simulando um banco de dados, onde o usuario pode adicionar, remover e buscar carros em uma tabela, e tambem pode adicionar, remover e buscar carros em arvores de busca binaria, AVL e vermelho e preto. \n");
+						break;	
+
+				case 14:
+						puts("https://github.com/filipegomes11/ProjetoAED2 \n");
+						puts("https://www.linkedin.com/in/filipe-gomes-571323232/ \n");
+						puts("Outros Repositorios: \n");
+						puts("https://github.com/filipegomes11/ \n");
+
+
 
 				case 99:
 						finalizar(&tab);
-						exit(0);
+						exit(0);	
 
 
 		}
-
 	}
-
 	return 0;
-	
 }
+	
+
+
+
+
+
+	
